@@ -1,59 +1,983 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Database</title>
-    <link href='/css/bootstrap.min.css' rel='stylesheet'>
+<!doctype html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <title> 微观天下_微信大数据领导者_微信文章_微信营销_微信公众号查排名_微信排行榜</title>
+  <meta name="keywords" content="微信,大数据,微信营销,微信大数据,微信文章,微信公众号,微信代理,微信营销软件,微信营销平台,微信推广,微信公众号排名" />
+  <meta name="description" content="微观天下是国内领先的微信大数据领导品牌，为广告公司、微信号运营者、新媒体行业和传统企业机构，提供微信运营、微信营销、微信推广相关的最专业的大数据服务。" />
+  <link rel="icon" type="image/png" href="/img/favicon.ico">
+  <link rel="stylesheet" href="/css/style.css"/>
+  <link rel="stylesheet" href="/css/jquery.popbox.css"/>
+  <script src="/js/jquery.191.js"></script>
+  <script src="/js/UIEvent.js"></script>
+  <script src="/js/jquery.popbox.js"></script>
+  <!-- search -->
+  <link rel="stylesheet" href="/css/jquery.typeahead.css">
+  <script src="/js/jquery.typeahead.js"></script>
+  <script type="text/javascript">
+    $(function(){
 
-    <script src='/js/jquery.min.js'></script>
-    <script src='/js/bootstrap.min.js'></script>
+      $('#q').typeahead({
+        minLength: 1,
+        order: "asc",
+        cache:true,
+        delay: 300,
+        list: true,
+        dynamic: true,
+        source: {
+          '': {
+            url: [
+              {
+                type: "POST",
+                url: "/search/sug",
+                data: {
+                  q: "{{query}}"
+                },
+              },
+              "data"
+            ],
+          }
+        },
+        callback: {
+          onClick: function (node, a, object) {
+            window.location.href="/search?q=" +object.display;
+          }
+        }
+      });
 
-    <style>
-      select, button {
-        margin-top: 5px;
-        margin-bottom: 5px;
-      }
+    });
 
-      h1 a:link { color: #000000; }
-      h1 a:visited { color: #000000; }
-      h1 a:hover { color: #4666FF; }
-    </style>
-  </head>
+  </script>
+</head>
+<body class="index">
+<div class="header">
+  <div class="top">
+    <a class="logo" href="/"><img src="/img/logo.png" alt="微观天下"/></a>
+    <div class="button">
+      <a class="managebtn" href="#"></a>
+    </div>
+    <div class="search_q">
+      <form id=""
+            name=""
+            action="/search">
+        <div class="typeahead-container">
+          <div class="typeahead-field">
+                            <span class="typeahead-query">
+                                <input id="q" name="q" type="search" placeholder="请输入微信公众号查询" autocomplete="off">
+                            </span>
+                            <span class="typeahead-button">
+                                <button type="submit">
+                                  <i class="search-icon"></i>
+                                </button>
+                            </span>
 
-  <body>
-    <div class='container'>
-      <div>
-        <h1 title='Current database. Click to visit home page.'>
-          <a href='/'><%= database_adapter %> - <%= database_name %></a>
-        </h1>
-      </div>
-
-      <div class='row'>
-        <div class='col-sm-2'>
-          <div class='sidebar-module'>
-            <h4>Tables</h4>
-            <ol class='list-unstyled'>
-              <% DB.tables.sort.each do |table_name| %>
-                <li><a href="/tables/<%= table_name %>"><%= table_name %></a></li>
-              <% end %>
-            </ol>
-          </div>
-          <hr>
-          <div class='sidebar-module'>
-            <h4>Views</h4>
-            <ol class='list-unstyled'>
-              <% DB.views.each do |view_name| %>
-                <li><a href="/views/<%= view_name %>"><%= view_name %></a></li>
-              <% end %>
-            </ol>
           </div>
         </div>
+      </form>
+    </div>
+  </div>
+  <div class="banner">
+    <div class="left">
+      <h1>微观天下</h1>
+      <p>weizhishu.com</p>
+    </div>
+    <div class="right">
+      <h2>微信大数据领导者</h2>
+      <p>500万微信公众号实时分析，为您的微信营销和运营，提供最专业的大数据服务</p>
+      <div class="links">
+        <!--<a class="btn-why" href="/user/grade">为什么要成为会员？</a>-->
 
-        <div class='col-sm-10 blog-main'>
-          <%= yield %>
-        </div>
+        <a class="btn-why" href="/monitor/account">进入管理</a>
       </div>
     </div>
-  </body>
-</html>
+  </div>
+</div>
+<div id="search_active"></div>
+<div class="main">
+  <ul class="intro">
+    <li>
+      <a href="/hotlist/accall">
+        <div class="content">
+          <div class="icons public-list"></div>
+          <h2>500万公众号榜单</h2>
+          <div class="desc">500多万微信公众号影响力排名、阅读数、粉丝数等数据查询</div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="/monitor/admin">
+        <div class="content">
+          <div class="icons custom-group"></div>
+          <h2>自定义分组</h2>
+          <div class="desc">自定义微信公众号榜单，实时监控分析他们的发布与传播情况</div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="/monitor/keyword">
+        <div class="content">
+          <div class="icons effect-query"></div>
+          <h2>实时查询效果</h2>
+          <div class="desc">查询特定关键词和文章在微信里的传播情况</div>
+        </div>
+      </a>
+    </li>
+    <li>
+      <a href="/hotlist/article">
+        <div class="content">
+          <div class="icons content-mining"></div>
+          <h2>内容素材挖掘</h2>
+          <div class="desc">查看每日各分类公众号的热门内容排行，为公众号运营者提供素材</div>
+        </div>
+      </a>
+    </li>
+  </ul>
+  <br/><br/><br/>
+
+  <h2>权威微信公众号榜单</h2>
+  <div class="rank">
+    <div class="control left disabled"><span></span></div>
+    <div class="list">
+
+      <ul>
+        <li>
+          <h3>新闻</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNKqgV68OGGvSG">清华南都</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=adKshoB4OWSvRm">新闻哥</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=bdauT1FAOGWuSG">新闻正前方</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=c6qsUF68NmCtSW">洞见</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=b6qsflZBNGSwS2">冯站长之家</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=1">查看更多</a></div>
+        </li>
+        <li>
+          <h3>娱乐</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bNerf1N6OmOuRW">卡娃微卡</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=btWtTVR7NzmuSW">掌上生活</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=atuqT1V5OWWvSW">任真天</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=c6SvTV24NGWwR2">卡妞微秀</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=adKsgo64OWmtSG">不贱不散</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=2">查看更多</a></div>
+        </li>
+        <li>
+          <h3>搞笑</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=c6WuUFyANGGnTG">冷兔</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bdewUFy8OmmtS2">冷笑话</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6OsTlV4OGiqR2">奔波儿灞与灞波儿奔</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bNWrTly8OGipRG">二货村</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=c6anflV3NGipSW">搞笑视频</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=3">查看更多</a></div>
+        </li>
+        <li>
+          <h3>旅游</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNaohlF5OzStS2">骑驴</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=adiogIGqPzmnS2">携程旅行网</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6OrTlZ2OWKqRW">亚洲航空</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atiwgIN4PGisRG">周末去哪玩</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=bNStfo28NmOnRG">南宁周边游</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=4">查看更多</a></div>
+        </li>
+        <li>
+          <h3>美食</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=btKuUF67PGinRW">每天教你学做饭</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=c6KqgVV7OGaoTW">每天学点做饭技巧</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=bdStTVy1OGirTG">教你学做饭</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bNirgVJ4NzKtRG">哈根达斯</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=aNmvfl61OzirRG">美食工场</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=5">查看更多</a></div>
+        </li>
+        <li>
+          <h3>财经</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bNarflF5PzGoRW">凤凰财经</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=b6KsglB6PzmnRW">保险人百科</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=bNargVF6PzGvRG">金融八卦女</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atOrgV65PGawR2">投行资本论坛</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=adKpfV24NWanTW">中信银行信用卡</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=6">查看更多</a></div>
+        </li>
+        <li>
+          <h3>健康</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bdWtUF61OGSnSG">老中医健康养生</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=atOpgYR2NmKrR2">医学界杂志</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=atKsUF68OzKrSW">懂点健康养生</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=cdKsgVF8NGOpRG">丁香园</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=atWsTV23OmmpRG">脉脉养生</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=7">查看更多</a></div>
+        </li>
+        <li>
+          <h3>管理</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=c6ushFJ8NmGvSG">微赚钱</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNKtflJBNmirS2">懂点社交礼仪</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=c6qnglFBPGetR2">创业智库</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atKpf1B5OWewTW">大脑方程式</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=cNOpTl66PzauSG">懂点社交礼仪</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=8">查看更多</a></div>
+        </li>
+        <li>
+          <h3>情感</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bNOtfVJ6OzWtTW">晓玲有话说</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=adSnhoR2OmOvR2">每天一句心情签名</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=adOugo63PGOqR2">十点读书</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=c6OrUF68OzCtS2">女人坊</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=cNqohVB4OWauRG">励志语录</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=9">查看更多</a></div>
+        </li>
+        <li>
+          <h3>政务</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=adaoTl67NWmvR2">共产党员</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNSwTVRAOWewSW">政商内参</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=aNSvUF68OzGuS2">Police</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bNeqTVFBNmOvS2">未来10年</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=aNevhV24OmCqSW">政商阅读</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=10">查看更多</a></div>
+        </li>
+        <li>
+          <h3>丽人</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=c6urUF61PzSqSm">女人帮</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=b6SvT1ZAOGStR2">零基础学化妆</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6SoTVR4PzKvSW">学点穿衣打扮</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bdWrTly1NWeuTG">女人该懂的那些事</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=bdqqTV61OmCsS2">扎头发很简单</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=11">查看更多</a></div>
+        </li>
+        <li>
+          <h3>收藏</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNerfVF3OGasSW">翠美·翡翠玉石专家</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=aNSrgVN2PGKwTW">城御翡翠批发</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6Wuhl67OmmsR2">翡翠玉石论坛</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atOrgFF2OmKrSG">中国翡翠</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=b6uoTVV7OzOnS2">城御翡翠</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=12">查看更多</a></div>
+        </li>
+        <li>
+          <h3>汽车</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bNSofVJ3NmWnTG">微信路况</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=aNenTlZBNWKvRm">微路况信息电子狗预报</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=cNOphFF1PzSpRW">查违章</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=b6eqfVF8NGKqS2">全国交通违法查询</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=bdWsUFyANzivS2">交通91.8</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=13">查看更多</a></div>
+        </li>
+        <li>
+          <h3>楼市</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bdauTl27PGasRm">房王网</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=b6mofVF2NWOpR2">壹地产</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=cdKpgFBBNmeuTW">商业与地产</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=adetgVN1OGawSW">郑州楼市</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=bNSofl2ANzioRW">房产零距离</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=14">查看更多</a></div>
+        </li>
+        <li>
+          <h3>时尚</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=cdaqUFyANzivR2">男人装</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bdKrUF68OGatRm">时尚女装搭配</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=bdStUF68OzSrRW">每天学点穿衣打扮</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=c6mnglR7NGCvSG">私人搭配师</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=cdKqT1N8OzKwTG">服装</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=15">查看更多</a></div>
+        </li>
+        <li>
+          <h3>科技</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNuphFJAPzmoSG">WiFi万能钥匙</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNWrgFF5PGOqS2">App每日推送</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=aNKpTVF3NWSvSG">和4G-惠分享</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=btWpT164OmepSm">农合论坛</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=btisgY7mazKoRG">华为荣耀</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=16">查看更多</a></div>
+        </li>
+        <li>
+          <h3>游戏</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=atOqgVV6OGaqR2">天天酷跑</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=aNSshVN7OWmvRG">全民飞机大战</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6SpTl63NmKrTG">雷霆战机</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atWnTVZ4NzSpR2">暖暖环游世界</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=aNWphFV7NGewSm">天天飞车</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=17">查看更多</a></div>
+        </li>
+        <li>
+          <h3>文史</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=c6qof1F7PGSwSG">慈怀读书会</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNinTlJ4OGauRW">每天一本好书</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=atWuTV26NzirRm">历史派</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=c6ushoR7NmasTG">无锡百草园书店</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=bNSwhFB8OmKpTW">读书文摘</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=19">查看更多</a></div>
+        </li>
+        <li>
+          <h3>名人</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=atatglJ5OGGqRG">占豪</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bdmngVN2NGOuTW">天蚕土豆</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=adOwgl62OzOuTG">ayawawa</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=btSqgF61OmioR2">崔玉涛</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=c6WsTl2BNWCnSm">时寒冰</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=20">查看更多</a></div>
+        </li>
+        <li>
+          <h3>教育</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNKqUF68OzKsSW">我是个妈妈</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=aNOvgVF1OmWoS2">一起作业家长通</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=c6OpTVBBNWetSm">亲子派</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atWtgVB4PGOsS2">育儿网</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=cdWrgF6APzCrTG">辣妈帮</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=21">查看更多</a></div>
+        </li>
+        <li>
+          <h3>影音</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=atOnf1B4OzeqTW">视觉志</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=b6esfVNANWitRm">零点哈哈视频</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6mngFF2NWmvRG">零点视频</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bdmnUF2AOGiwRG">热门短片</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=adeoUF68NWmuS2">一条</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=23">查看更多</a></div>
+        </li>
+        <li>
+          <h3>动漫</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=atWsflN1PzGpRW">伟大的安妮</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=adOoflNBNGCnR2">插画物语</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=adSwgVN4OWewSW">天狼星动漫</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=adSugI63PGesRW">想念熊</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=c6qwf1J7OmetRm">海贼王公会</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=24">查看更多</a></div>
+        </li>
+        <li>
+          <h3>企业</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=cdargFF8PGCvTG">尚品宅配</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=b6OnhI64NGGwTG">中国建设银行</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=b6KuhV6BPzitTW">彩票</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bNavhVBAPGWuTW">铂涛会</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=aNavTlV3OGanRW">腾讯手游官方站</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=25">查看更多</a></div>
+        </li>
+        <li>
+          <h3>其它</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bdisTVy3NmmoSG">万花统</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNusflN6OmOuRG">中国易经风水</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=aNuvTlV8PzirR2">天翼流量800</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=atethVB4NzSoRm">宏浩</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=b6SrglBAPGetTG">天徽神秘空间</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=26">查看更多</a></div>
+        </li>
+        <li>
+          <h3>宠物</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=atenhFB5NmCrSm">好狗狗</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=aNSrTlZ6OGGsSG">大爱狗狗控</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=cdWqTl28OmirRG">猫狗萌宠物</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=bNWoUF68OzSsSG">喵星人抢不到</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=b6eugFF2OzSqRG">教你读懂女人心</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=27">查看更多</a></div>
+        </li>
+        <li>
+          <h3>工具</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=btOvgl66NmSsSW">生活小助手</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=bNWvgVV3NGipTW">掌上百宝囊</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=adepgIN8OzKoR2">爱论网</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=cNergFN6OmSuTW">微电聊</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=adKngVF7OWisSG">微路况</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=28">查看更多</a></div>
+        </li>
+        <li>
+          <h3>本地</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=btKsglJ1NmepSm">流行东莞</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=cdOphlN1NzCoRm">南宁圈</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=atOqUF64NGerSW">掌上鹤城</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=aNarhl2ANmWtSm">茂名0668</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=cdinfV61NmGnS2">荣耀渭南网</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=29">查看更多</a></div>
+        </li>
+        <li>
+          <h3>购物</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=adWshFJ3PzGqSm">YOHO！有货</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=cNKsTV24OWioS2">香港折扣速递</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=bNmvgFB7NmioRG">日本淘</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=cNeugYN2PzmnR2">好机友</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=aNevf4CpZWKqSm">翡翠王朝</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=30">查看更多</a></div>
+        </li>
+        <li>
+          <h3>体育</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=aNerhlB4NmKsRW">羽毛球</a>
+          </div>
+          <div class="item r2">
+            <em class="fix">2</em>
+            <a class="non_link" href="/account?wid=adupUF63OGavS2">新浪体育</a>
+          </div>
+          <div class="item r3">
+            <em class="fix">3</em>
+            <a class="non_link" href="/account?wid=btWnTVZ2NzSrTW">最前线</a>
+          </div>
+          <div class="item r4">
+            <em class="fix">4</em>
+            <a class="non_link" href="/account?wid=cNWqglJ5OWKuSW">乒乓世界TTW</a>
+          </div>
+          <div class="item r5">
+            <em class="fix">5</em>
+            <a class="non_link" href="/account?wid=b6upglN3OGCuSW">苏群</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=31">查看更多</a></div>
+        </li>
+        <li>
+          <h3>O2O</h3>
+          <div class="item r1">
+            <em class="fix">1</em>
+            <a class="non_link" href="/account?wid=bNWsUF68OWKvRm">汕尾团购</a>
+          </div>
+
+          <div class="more"><a href="hotlist/account?gid=32">查看更多</a></div>
+        </li>
+      </ul>
+    </div>
+    <div class="control right"><span></span></div>
+  </div>
+  <br/><br/><br/>
+
+
+  <h2>4000+客户企业选择微观天下</h2>
+  <div class="customers">
+    <ul>
+      <li><img src="/img/cooperates/1.png" /></li>
+      <li><img src="/img/cooperates/2.png" /></li>
+      <li><img src="/img/cooperates/3.png" /></li>
+      <li><img src="/img/cooperates/4.png" /></li>
+      <li><img src="/img/cooperates/5.png" /></li>
+      <li><img src="/img/cooperates/6.png" /></li>
+
+    </ul>
+  </div>
+</div>
+<div class="footer">
+  <div class="top"></div>
+  <ul>
+    <li>
+      <h2>什么是微观天下</h2>
+      <div class="desc">微观天下是首个基于微信公众号大数据的分析、决策支持系统。相比其他同类产品分析几万个号，微观天下系统分析了500万个公众号。我们的团队由前Google员工组成，技术过硬，服务稳定。</div>
+      <img class="fix" src="/img/footer-logo.png" alt="">
+    </li>
+    <li style="visibility:hidden">
+      <h2>实用小工具</h2>
+      <h3>微信广告效果分析</h3>
+      <div class="src-ipt">
+        <div class="input"><input placeholder='输入微信公众号或ID' type="text"></div>
+        <a href="#">分析</a>
+      </div>
+      <div class="tips"><a href="/user/articlehow" target="_blank">如何获取微信文章URL？</a></div>
+      <h3>微信号粉丝数广告价值查询</h3>
+      <div class="src-ipt">
+        <div class="input"><input placeholder='输入微信公众号或ID' type="text"></div>
+        <a href="#">分析</a>
+      </div>
+    </li>
+    <li class="link">
+      <h2>企业版</h2>
+      <div class="comp">
+        <a href="/user/login">登录</a>
+        <a href="/user/grade">企业版特权</a>
+        <a href="/user/grade">企业版价格</a>
+        <a href="#">合作加盟</a>
+      </div>
+    </li>
+    <li>
+      <h2>联系我们</h2>
+      <div class="kfqq"><em></em>客服QQ: 3082135749</div>
+      <div class="kfemail"><em></em>support@weizhishu.com<br/>发送意见反馈</div>
+      <div class="kfemail"><em></em>support@weizhishu.com<br/>合作代理</div>
+    </li>
+  </ul>
+  <div class="copyright">Copyright @ 2014 北京快乐指尖科技有限公司 All Rights Reserved 版权所有 <br />备案号：京ICP备12030709号-1 </div>
+</div>
+</body>
+
+<script>
+  $(function(){
+    window.UIEvent.rankTab();
+    window.UIEvent.showAdd();
+
+    $('.login').on('click',function(){
+      // $.popbox('login');
+      //return false;
+    })
+
+    $('body').on('click','#login_box .login-btn',function(){ //首页登录
+      var $f = $('#login_box');
+      var _mobile = $f.find('input[name=mobile]').val();
+      var _password = $f.find('input[name=password]').val();
+      var _code = $f.find('input[name=code]').val();
+      var _autologin = ~~$f.find('input[name=autologin]').is(':checked');
+
+      var $ptips = $f.find('.ptips');
+
+      $.ajax({
+        url : '/user/login',
+        type : 'POST',
+        dataType : 'json',
+        data : {
+          mobile : _mobile,
+          password : _password,
+          code : _code,
+          autologin : _autologin
+        },
+        success:function( data ){
+          if( data.errno === 0 ){
+            window.location.href='/monitor/account';
+          }
+          else{
+            $ptips.html( data.errmsg);
+          }
+        },
+        error : function(){
+          $ptips.html('登录超时，请稍后再试');
+        }
+      })
+    })
+  })
+</script>
+</html> 
